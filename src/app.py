@@ -8,6 +8,8 @@ from PIL import Image
 # import Pillow
 
 # Load the YOLO model
+import os
+
 model = YOLO('models/best.pt')  # Make sure this is the correct path to your model
 
 def predict(img):
