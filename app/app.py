@@ -31,7 +31,8 @@ def predict(img):
 # Define the Gradio Interface
 iface = gr.Interface(
     fn=predict,
-    inputs=gr.Image(),  # Use Image component for input
+    # inputs=gr.Image(),  # Use Image component for input
+    inputs=gr.Image(sources=["webcam"], streaming=True),  # Use Image component for input
     outputs="text",     # Output the detected signs as text
     live=True            # Enable live updates for the webcam stream
 )
