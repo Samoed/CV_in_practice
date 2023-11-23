@@ -1,39 +1,34 @@
 import gradio as gr
+import numpy as np
 import pandas as pd
+from numpy import typing as npt
 from ultralytics import YOLO
 
 model = YOLO("models/best.pt")  # Make sure this is the correct path to your model
 
 
-def predict(img):
+def predict(
+    img: npt.NDArray[float]
+) -> tuple[pd.DataFrame, tuple[npt.NDArray[np.float64], list[tuple[tuple[int], str]]]]:
     results = model(img)[0]
     pred = {"scores": [], "classes": []}
+    annotation = []
     for box in results.boxes:
         pred["scores"].append(box.conf[0].cpu().item())
         pred["classes"].append(model.names[box.cls[0].cpu().item()])
-    return pd.DataFrame(pred)
+        annotation.append((tuple(map(int, box.xyxy.cpu().tolist()[0])), model.names[box.cls[0].cpu().item()]))
+    return pd.DataFrame(pred), (img, annotation)
 
 
-def webcam_interface() -> gr.Blocks:
+def image_interface() -> gr.Blocks:
     with gr.Blocks() as demo:
         with gr.Row():
-            image = gr.Image(sources=["webcam"], label="Input")
-
-            table = gr.DataFrame()
-        image.stream(predict, image, table)
-        # image.upload(predict, image, table)
+            image = gr.Image(sources=["upload"], label="Input")
+            with gr.Column():
+                table = gr.DataFrame()
+                ann_image = gr.AnnotatedImage()
+        image.upload(predict, image, [table, ann_image])
     return demo
 
 
-def video_result(img):
-    results = model(img)[0]
-    print(results.render())
-    return results.render()
-
-
-def video_interface() -> gr.Interface:
-    return gr.Interface(fn=predict, inputs="video", outputs="video")
-
-
-webcam_interface().queue().launch()
-# video_interface().launch()
+image_interface().queue().launch()
