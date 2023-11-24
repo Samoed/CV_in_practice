@@ -22,3 +22,10 @@ python src/app.py
 pdm install
 pre-commit install --install-hooks
 ```
+
+## Эксперименты
+
+|          | precision  | recall | mAP50 | mAP50-95 | fitness    | inference speed / sec  |
+| -------- | --------   | -------|-------| -------  | -------    |    -------             |
+| YOLOv8s  | 0.672      |  0.496 | 0.566 | 0.413    | 0.428      |    2.56                |
+| YOLOv8n  | 0.618      |  0.446 | 0.469 | 0.336    | 0.349      |    1.80                |
