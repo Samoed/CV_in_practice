@@ -50,6 +50,7 @@ pre-commit install --install-hooks
 Был проведен [перебор параметров (cos_lr, label_smoothing, lr0, optimizer. warmup_momentum) для обучения](./runs.csv) с использованием optuna до 10 эпох.
 
 | Параметр        | лучший результат |
+| --------------- | ---------------- |
 | label_smoothing | 0.427559         |
 | lr0             | 0.006689         |
 | optimizer       | AdamW            |
